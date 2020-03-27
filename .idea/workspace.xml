@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f7e69120-da72-4601-ab05-4e30c28139a0" name="Default Changelist" comment="" />
+    <list default="true" id="f7e69120-da72-4601-ab05-4e30c28139a0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,7 +20,15 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="C:\Users\Luis Cuevas\Documents\Aplicaciones para comunicaciones en red\Practicas\Practica3\.idea" />
+      </set>
+    </option>
+  </component>
   <component name="ProjectId" id="1Zisc2KIcxD2jZcoNRR32FBJmrp" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -25,7 +36,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Practica2(VariosJugadores)" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager" selected="Python.Jugador">
     <configuration name="Jugador" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -88,13 +100,29 @@
       <option name="presentableId" value="Default" />
       <updated>1585333324508</updated>
     </task>
+    <task id="LOCAL-00001" summary="V1">
+      <created>1585335227207</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1585335227207</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="V1" />
+    <option name="LAST_COMMIT_MESSAGE" value="V1" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="463" y="140" key="FileChooserDialogImpl" timestamp="1585333501250">
+    <state x="235" y="0" key="CommitChangelistDialog2" timestamp="1585335218148">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="463" y="140" key="FileChooserDialogImpl/0.0.1366.768@0.0.1366.768" timestamp="1585333501250" />
+    <state x="235" y="0" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1585335218148" />
+    <state x="463" y="140" key="FileChooserDialogImpl" timestamp="1585335273396">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state x="463" y="140" key="FileChooserDialogImpl/0.0.1366.768@0.0.1366.768" timestamp="1585335273396" />
     <state width="1345" height="192" key="GridCell.Tab.0.bottom" timestamp="1585334082013">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
