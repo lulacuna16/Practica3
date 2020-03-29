@@ -109,7 +109,6 @@ def verMatriz(matriz):
         for j in range(largo):  # LARGO
             print(matriz[i][j], "\t", end=" ")
         print()
-
 def colocar(matriz,sim,Client_conn):
     pos=str(Client_conn.recv(buffer_size),"ascii")
     print(pos)
@@ -210,7 +209,6 @@ def jugar(matriz,listaConexiones,listaHilos):
 
 def gestionHilos():
     logging.debug('Jugador: ')
-
 def IniciarHilos(listaConexiones,case):
     if case==1:
         matriz=matrizP()
@@ -222,10 +220,8 @@ def IniciarHilos(listaConexiones,case):
         listaHilos.append(threading.Thread(target=gestionHilos,name="J"+str(i)))
         listaHilos[i].start()
     jugar(matriz,listaConexiones,listaHilos)
-
-
 def servirPorSiempre(TCPServerSocket, listaconexiones):
-    #try:
+    try:
         while True:
             Client_conn, Client_addr = TCPServerSocket.accept()
             listaconexiones.append(Client_conn)
@@ -250,13 +246,12 @@ def servirPorSiempre(TCPServerSocket, listaconexiones):
                 for i in range(len(listaConexiones)):
                     listaConexiones[i].sendall(caseb) #Envia a todos los clientes el nivel elegido
                 IniciarHilos(listaConexiones,case)
-    #except Exception as e:
-        #print(e)
+    except Exception as e:
+        print(e)
 
 HOST = "192.168.1.64"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
-lock=Lock()
 listaConexiones = []
 listaHilos=[]
 
