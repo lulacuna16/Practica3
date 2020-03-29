@@ -67,40 +67,24 @@ def ganarV(matriz,sim):
                 if cont is (len(matriz)-1):
                     return 1
                     break;
-
-def menu(TCPClientSocket):
-
+def verMenu(TCPClientSocket):
         print("\tElige una dificultad\t")
         print("1. Principiante")
         print("2. Avanzado")
         case=int(input("Opcion: "))
         caseb = case.to_bytes(1, 'little')
         TCPClientSocket.sendall(caseb)
-        if case == 1:
-            print("Escogiste Principiante")
-            """matrizp=matrizP()
-            verMatriz(matrizp)
-            jugar(matrizp,TCPClientSocket)"""
-        if case == 2:
-            print("Escogiste Avanzado")
-            """matriza=matrizA()
-            verMatriz(matriza)
-            jugar(matriza,TCPClientSocket)"""
-
-def menuAux(case):
-
+def menu(case,Jugadores,Cliente,TCPClientSocket):
     if case == 1:
         print("Nivel Principiante")
-        """matrizp = matrizP()
+        matrizp = matrizP()
         verMatriz(matrizp)
-        jugar(matrizp, TCPClientSocket)"""
+        jugar(matrizp, TCPClientSocket,Jugadores,Cliente)
     if case == 2:
         print("Nivel Avanzado")
-        """matriza = matrizA()
+        matriza = matrizA()
         verMatriz(matriza)
-        jugar(matriza, TCPClientSocket)"""
-
-
+        jugar(matriza, TCPClientSocket,Jugadores,Cliente)
 def colocar(matriz,sim,TCPClientSocket):
     cont=0
     while cont==0:
@@ -126,33 +110,66 @@ def colocar(matriz,sim,TCPClientSocket):
                 print("Fila Invalida")
                 break
     TCPClientSocket.sendall(pos.encode())
-def juegoAuto(matriz,sim,TCPClientSocket):
+def juegoAuto(matriz,sim,TCPClientSocket): #Juego de la maquina
     pos=str(TCPClientSocket.recv(buffer_size),"ascii")
     fila = int (pos[0])
     col = ord(pos[1]) - 64
     matriz[int(fila)][int(col)] = sim
     print(str(TCPClientSocket.recv(buffer_size),"ascii"))
+def actTablero(matriz,sim,pos): #Recibe las jugadas de los otros jugadores
+    fila = int(pos[0])
+    col = ord(pos[1]) - 64
+    matriz[int(fila)][int(col)] = sim
+    #print(str(TCPClientSocket.recv(buffer_size), "ascii"))
 
-def jugar(matriz, TCPClientSocket):
+def jugar(matriz, TCPClientSocket,Jugadores,Cliente):
     simJ="x"
     simS="o"
     cont=0
     print("Jugador es: ", simJ)
     print("Maquina es: ", simS)
     long=(len(matriz)-1)*(len(matriz)-1)
+    termina=False
     inicio=time()
     while cont<long:
-        print("TURNO JUGADOR\n")
-        colocar(matriz,simJ,TCPClientSocket)
-        if ganarH(matriz,simJ) is 1:
-            print("Gano JUGADOR")
-            break;
-        if ganarV(matriz, simJ) is 1:
-            print("Gano JUGADOR")
-            break;
-        cont+=1;
-        if cont>=long:
-            print("Juego Terminado: EMPATE")
+        for i in range (Jugadores):
+            if i!=Cliente:
+                print("TURNO JUGADOR " + str(i) + "\n")
+                pos = str(TCPClientSocket.recv(buffer_size), "ascii")
+                actTablero(matriz,simJ,pos)
+                verMatriz(matriz)
+                if ganarH(matriz, simJ) is 1:
+                    print("Gano JUGADOR " + str(i) + "\n")
+                    termina=True
+                    break
+                if ganarV(matriz, simJ) is 1:
+                    print("Gano JUGADOR " + str(i) + "\n")
+                    termina = True
+                    break
+                cont += 1
+                if cont >= long:
+                    print("Juego Terminado: EMPATE")
+                    termina = True
+                    break
+            else:
+                print("TU TURNO JUGADOR " + str(i) + "\n")
+                colocar(matriz, simJ, TCPClientSocket)
+                if ganarH(matriz, simJ) is 1:
+                    print("Ganaste JUGADOR " + str(i) + "\n")
+                    termina = True
+                    break
+                if ganarV(matriz, simJ) is 1:
+                    print("Ganaste JUGADOR " + str(i) + "\n")
+                    termina = True
+                    break
+                cont += 1
+                if cont >= long:
+                    print("Juego Terminado: EMPATE")
+                    termina = True
+                    break
+            if termina:
+                break
+        if termina:
             break
         print("TURNO MAQUINA\n")
         juegoAuto(matriz,simS,TCPClientSocket)
@@ -177,22 +194,22 @@ import socket
 
 #HOST = str(input("Ingrese IP del servidor: "))  # The server's hostname or IP address
 #PORT = int(input("Ingrese Puerto del servidor: "))  # The port used by the server
-HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
+HOST = "192.168.1.64" # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     TCPClientSocket.connect((HOST, PORT))
-    #menu(TCPClientSocket)
+
     print(str(TCPClientSocket.recv(buffer_size), "ascii")) #Mensaje de espera de otros jugadores
-    print(str(TCPClientSocket.recv(buffer_size), "ascii")) #Mensaje de todos jugadores conectados
+    Jugadores = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little') #Tener presente cuantos jugadores hay
+    print("Todos los jugadores (" +str(Jugadores)+ ") se han conectado")  # Mensaje de todos jugadores conectados
     cliente = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little') #Veririficar que jugador soy
 
     if(cliente==0):
-        print("Cliente:", cliente + 1)
-        menu(TCPClientSocket)
+        print("Jugador:", cliente)
+        verMenu(TCPClientSocket) #Menu para elegir dificultad
     else:
-        print("Soy jugador ",cliente+1,". Esperando tablero de juego")
-        case = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little')  # comenzar Juego segun lo elegido
-        menuAux(case)
-        #Inicio(TCPClientSocket,case)
+        print("Jugador: ",cliente,". Esperando tablero de juego")
+    case = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little')#Dificultad elegida por jugador 1
+    menu(case,Jugadores,cliente,TCPClientSocket)# Se genera el tablero con la dificultad elegida

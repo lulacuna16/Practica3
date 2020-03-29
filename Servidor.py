@@ -1,8 +1,8 @@
 # Numero de dias vividos 8023
 from random import randint
 from time import time
-import socket
-import threading
+import socket,threading,logging
+from threading import Lock
 import sys
 
 """def practica(i):
@@ -15,10 +15,11 @@ import sys
 dias=8023 #dias vividos
 print ("Toca realizar el ejercicio ",dias%3,": ", practica(dias%3))  """
 
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(message)s (%(threadName)-0s)',)
 
 # REALIZAR GATO DUMMY
 #CREANDO MATRIZ
-
 def matrizP(): #Tablero Principiante
     filas=["1","2","3"];
     columnas=["A","B","C"];
@@ -84,21 +85,6 @@ def verMatriz(matriz):
         for j in range(largo):  # LARGO
             print(matriz[i][j], "\t", end=" ")
         print()
-def menu(case,Client_conn):
-        """print("\tElige una dificultad\t")
-        print("1. Principiante")
-        print("2. Avanzado")"""
-        if case == 1:
-            matrizp=matrizP()
-            verMatriz(matrizp)
-            jugar(matrizp,Client_conn)
-            return False
-        if case == 2:
-            matriza=matrizA()
-            verMatriz(matriza)
-            jugar(matriza,Client_conn)
-            return False
-
 
 def colocar(matriz,sim,Client_conn):
     pos=str(Client_conn.recv(buffer_size),"ascii")
@@ -106,11 +92,12 @@ def colocar(matriz,sim,Client_conn):
     fila = int(pos[0])
     col = ord(pos[1]) - 64
     matriz[int(fila)][int(col)]=sim
-def juegoAuto(matriz,sim,Client_conn):
+    return pos #Retorna posicion que escogio el jugador en turno para actualizar el tablero en todos los jugadores
+def juegoAuto(matriz,sim,listaConexiones,listaHilos):
     cont=0
     while cont==0:
         fila = randint(1,len(matriz)-1)
-        col = randint(65,65+(len(matriz)-2))-64#COdigo ascii desde A hasta el tamaño de la matriz
+        col = randint(65,65+(len(matriz)-2))-64 #Codigo ascii desde A hasta el tamaño de la matriz
 
         for i in range (len(matriz)):
             if i==fila:
@@ -131,39 +118,59 @@ def juegoAuto(matriz,sim,Client_conn):
                 #print("Fila Invalida")
                 break;
     pos=str(fila)+(chr(col+64))
-    Client_conn.sendall(pos.encode())
-    Client_conn.sendall(msg.encode())
-
-def jugar(matriz,Client_conn):
+    for j in range(len(listaHilos)):
+        print("Actualizando tablero de", listaHilos[j].getName())
+        listaConexiones[j].sendall(pos.encode())
+        listaConexiones[j].sendall(msg.encode())
+        continue
+def actTablero(pos, listaConexiones,listaHilos,i):
+    for j in range(len(listaHilos)):
+        if (i != j): #Evitar que se envíe la posicion al jugador que hizo la jugada
+            print("Actualizando tablero de", listaHilos[j].getName())
+            listaConexiones[j].sendall(pos.encode())
+            continue
+def jugar(matriz,listaConexiones,listaHilos):
     simJ="x"
     simS="o"
+    termina=False
     cont=0
     print("Jugador es: ", simJ)
     print("Maquina es: ", simS)
     long=(len(matriz)-1)*(len(matriz)-1)
     inicio=time()
     while cont<long:
-        print("TURNO JUGADOR\n")
-        colocar(matriz,simJ,Client_conn)
-        verMatriz(matriz)
-        if ganarH(matriz,simJ) is 1:
-            print("Gano JUGADOR")
-            break;
-        if ganarV(matriz, simJ) is 1:
-            print("Gano JUGADOR")
-            break;
-        cont+=1;
-        if cont>=long:
-            print("Juego Terminado: EMPATE")
+        for i in range(len(listaConexiones)):
+            with Lock(): #Bloquear opciones de tiro mientras esta el jugador correspondiente en turno
+                print("TURNO JUGADOR "+listaHilos[i].getName()+"\n")
+                pos=colocar(matriz,simJ,listaConexiones[i])
+                actTablero(pos, listaConexiones, listaHilos, i)
+                verMatriz(matriz)
+                if ganarH(matriz,simJ) is 1:
+                    print("Gano JUGADOR "+listaHilos[i].getName()+"\n")
+                    termina=True
+                    break
+                if ganarV(matriz, simJ) is 1:
+                    print("Gano JUGADOR "+listaHilos[i].getName()+"\n")
+                    termina = True
+                    break
+                cont+=1
+                if cont>=long:
+                    print("Juego Terminado: EMPATE")
+                    termina = True
+                    break
+
+            if termina:
+                break
+        if termina:
             break
         print("TURNO MAQUINA\n")
-        juegoAuto(matriz,simS, Client_conn)
+        juegoAuto(matriz,simS, listaConexiones,listaHilos) #Turno donde la maquina genera su jugada y se actualiza el tablero
         if ganarH(matriz,simS) is 1:
             print("Gano MAQUINA")
-            break;
+            break
         if ganarV(matriz, simS) is 1:
             print("Gano MAQUINA")
-            break;
+            break
         cont+=1
         if cont>=long:
             print("Juego Terminado: EMPATE")
@@ -171,30 +178,36 @@ def jugar(matriz,Client_conn):
     final=time()
     print("Duracion de la partida %.2f segundos" %(final-inicio))
 
-def Iniciar(Client_conn,Client_addr):
-    with Client_conn:
-        hilo = threading.current_thread()
-        print("ID Hilo: ",hilo.ident)
-        #print("Conectado a", Client_addr)
-        while True:
-            case = int.from_bytes(Client_conn.recv(buffer_size), 'little')
-            j=menu(case,Client_conn)
+def gestionHilos():
+    logging.debug('Jugador: ')
 
-            if j is False:
-                Client_conn.sendall(b"Juego Terminado.Adios")
-                break
+def IniciarHilos(listaConexiones,case):
+    if case==1:
+        matriz=matrizP()
+        #print("se creo matriz P")
+    if case==2:
+        matriz=matrizA()
+        #print("se creo matriz A")
+    for i in range (len(listaConexiones)):
+        listaHilos.append(threading.Thread(target=gestionHilos,name="J"+str(i)))
+        listaHilos[i].start()
+    jugar(matriz,listaConexiones,listaHilos)
+
+
 def servirPorSiempre(TCPServerSocket, listaconexiones):
-    try:
+    #try:
         while True:
             Client_conn, Client_addr = TCPServerSocket.accept()
-            #print("Conectado a", Client_addr)
             listaconexiones.append(Client_conn)
             if len(listaconexiones)<numConn:
-                Client_conn.sendall(b"Esperando la conexion de los jugadores faltantes ("+len(listaConexiones)+")")
+                msg="Esperando la conexion de los jugadores faltantes ("+str(numConn-len(listaConexiones))+")"
+                Client_conn.sendall(msg.encode())
+                print("Faltan "+str(numConn-len(listaConexiones))+" conexion(es)")
             else:
                 Client_conn.sendall(b"Eres el jugador que faltaba")
                 for i in range (len(listaConexiones)):
-                    listaConexiones[i].sendall(b"Todos los jugadores ("+numConn+") se han conectado")
+                    ClientesConectados=numConn.to_bytes(1,'little')
+                    listaConexiones[i].sendall(ClientesConectados)
             if len(listaConexiones)==numConn:
                 print("Esperando inicio de juego")
                 for i in range(len(listaConexiones)):
@@ -204,16 +217,19 @@ def servirPorSiempre(TCPServerSocket, listaconexiones):
                 case = int.from_bytes(listaConexiones[0].recv(buffer_size), 'little')
                 print("Recibido modo de juego: ", case)
                 caseb = case.to_bytes(1, 'little')
-                for i in range(1,len(listaConexiones)):
-                    listaConexiones[i].sendall(caseb)
-                #IniciarHilos(listaConexiones,case)
-    except Exception as e:
-        print(e)
+                for i in range(len(listaConexiones)):
+                    listaConexiones[i].sendall(caseb) #Envia a todos los clientes el nivel elegido
+                IniciarHilos(listaConexiones,case)
+    #except Exception as e:
+        #print(e)
 
-HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
+HOST = "192.168.1.64"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
+lock=Lock()
 listaConexiones = []
+listaHilos=[]
+
 numConn=int(input("Ingrese Número de conexiones a aceptar: "))
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPServerSocket:
     TCPServerSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
