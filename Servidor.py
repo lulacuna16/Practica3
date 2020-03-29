@@ -78,6 +78,30 @@ def ganarV(matriz,sim):
                 if cont is (len(matriz)-1):
                     return 1
                     break;
+def ganarD(matriz,sim):
+    cont=0
+    i=1
+    j=1
+    while i<len(matriz[0]):
+        if matriz[i][j] == sim:
+            cont += 1
+        i+=1
+        j+=1
+        if cont is (len(matriz) - 1):
+            return 1
+            break
+    if cont<(len(matriz) - 1) :
+        cont=0
+        i=len(matriz)-1
+        j=1
+        while i>0 and j<len(matriz[0]):
+            if matriz[i][j]==sim:
+                cont+=1
+            i-=1
+            j+=1
+            if cont is (len(matriz)-1):
+                return 1
+                break
 def verMatriz(matriz):
     alto = len(matriz)
     largo = len(matriz[0])
@@ -153,12 +177,15 @@ def jugar(matriz,listaConexiones,listaHilos):
                     print("Gano JUGADOR "+listaHilos[i].getName()+"\n")
                     termina = True
                     break
+                if ganarD(matriz, simJ) is 1:
+                    print("Gano JUGADOR "+listaHilos[i].getName()+"\n")
+                    termina = True
+                    break
                 cont+=1
                 if cont>=long:
                     print("Juego Terminado: EMPATE")
                     termina = True
                     break
-
             if termina:
                 break
         if termina:
@@ -169,6 +196,9 @@ def jugar(matriz,listaConexiones,listaHilos):
             print("Gano MAQUINA")
             break
         if ganarV(matriz, simS) is 1:
+            print("Gano MAQUINA")
+            break
+        if ganarD(matriz, simS) is 1:
             print("Gano MAQUINA")
             break
         cont+=1

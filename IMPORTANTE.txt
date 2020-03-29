@@ -1,4 +1,4 @@
 Consideraciones:
+-El primer jugador en conectarse es el único que puede escoger el tamaño del tablero: Principiante o avanzado
 -Dado que el juego del gato se trata de 1vs1, todos los usuarios en conectarse jugarán contra la máquina "La Unión Hace la Fuerza"
--El primer jugadoren conectarse es el único que puede escoger el tamaño del tablero: Principiante o avanzado
 -Si gana el equipo de jugadores, se notifica a todos los jugadores que ganó el jugador que hizo la jugada de la victoria

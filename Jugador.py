@@ -67,6 +67,30 @@ def ganarV(matriz,sim):
                 if cont is (len(matriz)-1):
                     return 1
                     break;
+def ganarD(matriz,sim):
+    cont=0
+    i=1
+    j=1
+    while i<len(matriz[0]):
+        if matriz[i][j] == sim:
+            cont += 1
+        i+=1
+        j+=1
+        if cont is (len(matriz) - 1):
+            return 1
+            break
+    if cont<(len(matriz) - 1) :
+        cont=0
+        i=len(matriz)-1
+        j=1
+        while i>0 and j<len(matriz[0]):
+            if matriz[i][j]==sim:
+                cont+=1
+            i-=1
+            j+=1
+            if cont is (len(matriz)-1):
+                return 1
+                break
 def verMenu(TCPClientSocket):
         print("\tElige una dificultad\t")
         print("1. Principiante")
@@ -146,6 +170,10 @@ def jugar(matriz, TCPClientSocket,Jugadores,Cliente):
                     print("Gano JUGADOR " + str(i) + "\n")
                     termina = True
                     break
+                if ganarD(matriz, simJ) is 1:
+                    print("Gano JUGADOR " + str(i) + "\n")
+                    termina = True
+                    break
                 cont += 1
                 if cont >= long:
                     print("Juego Terminado: EMPATE")
@@ -159,6 +187,10 @@ def jugar(matriz, TCPClientSocket,Jugadores,Cliente):
                     termina = True
                     break
                 if ganarV(matriz, simJ) is 1:
+                    print("Ganaste JUGADOR " + str(i) + "\n")
+                    termina = True
+                    break
+                if ganarD(matriz, simJ) is 1:
                     print("Ganaste JUGADOR " + str(i) + "\n")
                     termina = True
                     break
@@ -178,6 +210,9 @@ def jugar(matriz, TCPClientSocket,Jugadores,Cliente):
             print("Gano MAQUINA")
             break;
         if ganarV(matriz, simS) is 1:
+            print("Gano MAQUINA")
+            break;
+        if ganarD(matriz, simS) is 1:
             print("Gano MAQUINA")
             break;
         cont+=1
