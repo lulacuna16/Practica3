@@ -231,20 +231,19 @@ def servirPorSiempre(TCPServerSocket, listaconexiones):
                 print("Faltan "+str(numConn-len(listaConexiones))+" conexion(es)")
             else:
                 Client_conn.sendall(b"Eres el jugador que faltaba")
-                for i in range (len(listaConexiones)):
-                    ClientesConectados=numConn.to_bytes(1,'little')
-                    listaConexiones[i].sendall(ClientesConectados)
+                for i in range (0,len(listaConexiones)):
+                    listaConexiones[i].sendall(numConn.to_bytes(1,'little'))
             if len(listaConexiones)==numConn:
                 print("Esperando inicio de juego")
-                for i in range(len(listaConexiones)):
-                    cliente=i.to_bytes(1, 'little')
-                    listaConexiones[i].sendall(cliente) #Envia el numero de cliente a cada uno de ellos
+                for j in range(0,len(listaConexiones)):
+                    cliente=j.to_bytes(1, 'little')
+                    listaConexiones[j].sendall(cliente) #Envia el numero de cliente a cada uno de ellos
                 #Solo el jugador 0, el primero en conectarse, puede escoger la dificultad
                 case = int.from_bytes(listaConexiones[0].recv(buffer_size), 'little')
                 print("Recibido modo de juego: ", case)
                 caseb = case.to_bytes(1, 'little')
-                for i in range(len(listaConexiones)):
-                    listaConexiones[i].sendall(caseb) #Envia a todos los clientes el nivel elegido
+                for z in range(0,len(listaConexiones)):
+                    listaConexiones[z].sendall(caseb) #Envia a todos los clientes el nivel elegido
                 IniciarHilos(listaConexiones,case)
     except Exception as e:
         print(e)

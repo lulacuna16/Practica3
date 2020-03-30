@@ -233,7 +233,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
 
     print(str(TCPClientSocket.recv(buffer_size), "ascii")) #Mensaje de espera de otros jugadores
     Jugadores = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little') #Tener presente cuantos jugadores hay
-    print("Todos los jugadores (" +str(Jugadores)+ ") se han conectado")  # Mensaje de todos jugadores conectados
+    print("Todos los jugadores (%d) se han conectado"%Jugadores)  # Mensaje de todos jugadores conectados
     cliente = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little') #Veririficar que jugador soy
 
     if(cliente==0):
