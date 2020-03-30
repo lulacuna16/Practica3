@@ -231,9 +231,9 @@ def servirPorSiempre(TCPServerSocket, listaConexiones):
                 print("Faltan "+str(numConn-len(listaConexiones))+" conexion(es)")
             else:
                 Client_conn.sendall(b"Eres el jugador que faltaba")
-                jugadores=len(listaConexiones)
+                jugadores=bytes([len(listaConexiones)])
                 for i in range (0,len(listaConexiones)):
-                    listaConexiones[i].sendall(jugadores.to_bytes(1,'little'))
+                    listaConexiones[i].sendall(jugadores)
             if len(listaConexiones)==numConn:
                 print("Esperando inicio de juego")
                 for j in range(0,len(listaConexiones)):
@@ -249,7 +249,7 @@ def servirPorSiempre(TCPServerSocket, listaConexiones):
     except Exception as e:
         print(e)
 
-HOST = "192.168.1.64"  # Standard loopback interface address (localhost)
+HOST = "192.168.1.105"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 listaConexiones = []
