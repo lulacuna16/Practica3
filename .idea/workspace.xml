@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f7e69120-da72-4601-ab05-4e30c28139a0" name="Default Changelist" comment="">
+    <list default="true" id="f7e69120-da72-4601-ab05-4e30c28139a0" name="Default Changelist" comment="V3.1">
+      <change afterPath="$PROJECT_DIR$/2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Jugador.py" beforeDir="false" afterPath="$PROJECT_DIR$/Jugador.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Servidor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Servidor.py" afterDir="false" />
@@ -48,7 +49,7 @@
       <recent name="C:\Users\Luis Cuevas\Documents\Aplicaciones para comunicaciones en red\Practicas\Practica3" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Jugador">
+  <component name="RunManager" selected="Python.3">
     <configuration name="2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Practica3" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -156,11 +157,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Jugador" />
-        <item itemvalue="Python.Servidor" />
         <item itemvalue="Python.3" />
         <item itemvalue="Python.2" />
+        <item itemvalue="Python.Jugador" />
         <item itemvalue="Python.Jugador2" />
+        <item itemvalue="Python.Servidor" />
       </list>
     </recent_temporary>
   </component>
@@ -203,24 +204,40 @@
       <option name="project" value="LOCAL" />
       <updated>1585518770998</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="V3.1">
+      <created>1585519036723</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1585519036723</updated>
+    </task>
+    <task id="LOCAL-00006" summary="V4">
+      <created>1585530953455</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1585530953456</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="V1" />
     <MESSAGE value="V2. Falta Ganar en diagonal" />
     <MESSAGE value="V3" />
-    <option name="LAST_COMMIT_MESSAGE" value="V3" />
+    <MESSAGE value="V3.1" />
+    <MESSAGE value="V4" />
+    <option name="LAST_COMMIT_MESSAGE" value="V4" />
   </component>
   <component name="WindowStateProjectService">
     <state x="444" y="188" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1585340149011">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="444" y="188" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.768@0.0.1366.768" timestamp="1585340149011" />
-    <state x="235" y="0" key="CommitChangelistDialog2" timestamp="1585518768773">
+    <state x="235" y="0" key="CommitChangelistDialog2" timestamp="1585530944313">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="235" y="0" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1585518768773" />
+    <state x="235" y="0" key="CommitChangelistDialog2/0.0.1366.768@0.0.1366.768" timestamp="1585530944313" />
     <state x="463" y="140" key="FileChooserDialogImpl" timestamp="1585353300684">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
@@ -229,22 +246,22 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state x="517" y="301" width="356" height="166" key="Github.CreateGistDialog/0.0.1366.768@0.0.1366.768" timestamp="1585335690299" />
-    <state width="1328" height="176" key="GridCell.Tab.0.bottom" timestamp="1585519018123">
+    <state width="1328" height="176" key="GridCell.Tab.0.bottom" timestamp="1585535379972">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1328" height="176" key="GridCell.Tab.0.bottom/0.0.1366.768@0.0.1366.768" timestamp="1585519018123" />
-    <state width="1328" height="176" key="GridCell.Tab.0.center" timestamp="1585519018123">
+    <state width="1328" height="176" key="GridCell.Tab.0.bottom/0.0.1366.768@0.0.1366.768" timestamp="1585535379972" />
+    <state width="1328" height="176" key="GridCell.Tab.0.center" timestamp="1585535379971">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1328" height="176" key="GridCell.Tab.0.center/0.0.1366.768@0.0.1366.768" timestamp="1585519018123" />
-    <state width="1328" height="176" key="GridCell.Tab.0.left" timestamp="1585519018123">
+    <state width="1328" height="176" key="GridCell.Tab.0.center/0.0.1366.768@0.0.1366.768" timestamp="1585535379971" />
+    <state width="1328" height="176" key="GridCell.Tab.0.left" timestamp="1585535379970">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1328" height="176" key="GridCell.Tab.0.left/0.0.1366.768@0.0.1366.768" timestamp="1585519018123" />
-    <state width="1328" height="176" key="GridCell.Tab.0.right" timestamp="1585519018123">
+    <state width="1328" height="176" key="GridCell.Tab.0.left/0.0.1366.768@0.0.1366.768" timestamp="1585535379970" />
+    <state width="1328" height="176" key="GridCell.Tab.0.right" timestamp="1585535379972">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state width="1328" height="176" key="GridCell.Tab.0.right/0.0.1366.768@0.0.1366.768" timestamp="1585519018123" />
+    <state width="1328" height="176" key="GridCell.Tab.0.right/0.0.1366.768@0.0.1366.768" timestamp="1585535379972" />
     <state width="1344" height="242" key="GridCell.Tab.1.bottom" timestamp="1585457790803">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
@@ -261,10 +278,14 @@
       <screen x="0" y="0" width="1366" height="768" />
     </state>
     <state width="1344" height="242" key="GridCell.Tab.1.right/0.0.1366.768@0.0.1366.768" timestamp="1585457790803" />
-    <state x="379" y="209" key="com.intellij.ide.util.TipDialog" timestamp="1585498215127">
+    <state x="275" y="118" key="Vcs.Push.Dialog.v2" timestamp="1585530958824">
       <screen x="0" y="0" width="1366" height="768" />
     </state>
-    <state x="379" y="209" key="com.intellij.ide.util.TipDialog/0.0.1366.768@0.0.1366.768" timestamp="1585498215127" />
+    <state x="275" y="118" key="Vcs.Push.Dialog.v2/0.0.1366.768@0.0.1366.768" timestamp="1585530958824" />
+    <state x="379" y="209" key="com.intellij.ide.util.TipDialog" timestamp="1585530787291">
+      <screen x="0" y="0" width="1366" height="768" />
+    </state>
+    <state x="379" y="209" key="com.intellij.ide.util.TipDialog/0.0.1366.768@0.0.1366.768" timestamp="1585530787291" />
     <state x="346" y="89" width="672" height="678" key="search.everywhere.popup" timestamp="1585442238122">
       <screen x="0" y="0" width="1366" height="768" />
     </state>

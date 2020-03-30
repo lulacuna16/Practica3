@@ -220,19 +220,20 @@ def IniciarHilos(listaConexiones,case):
         listaHilos.append(threading.Thread(target=gestionHilos,name="J"+str(i)))
         listaHilos[i].start()
     jugar(matriz,listaConexiones,listaHilos)
-def servirPorSiempre(TCPServerSocket, listaconexiones):
+def servirPorSiempre(TCPServerSocket, listaConexiones):
     try:
         while True:
             Client_conn, Client_addr = TCPServerSocket.accept()
-            listaconexiones.append(Client_conn)
-            if len(listaconexiones)<numConn:
+            listaConexiones.append(Client_conn)
+            if len(listaConexiones)<numConn:
                 msg="Esperando la conexion de los jugadores faltantes ("+str(numConn-len(listaConexiones))+")"
                 Client_conn.sendall(msg.encode())
                 print("Faltan "+str(numConn-len(listaConexiones))+" conexion(es)")
             else:
                 Client_conn.sendall(b"Eres el jugador que faltaba")
+                jugadores=len(listaConexiones)
                 for i in range (0,len(listaConexiones)):
-                    listaConexiones[i].sendall(numConn.to_bytes(1,'little'))
+                    listaConexiones[i].sendall(jugadores.to_bytes(1,'little'))
             if len(listaConexiones)==numConn:
                 print("Esperando inicio de juego")
                 for j in range(0,len(listaConexiones)):
