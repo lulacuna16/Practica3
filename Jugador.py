@@ -222,10 +222,10 @@ def jugar(matriz, TCPClientSocket,Jugadores,Cliente):
     print("Duracion de la partida %.2f segundos" %(final-inicio))
 
 
-#HOST = str(input("Ingrese IP del servidor: "))  # The server's hostname or IP address
-#PORT = int(input("Ingrese Puerto del servidor: "))  # The port used by the server
-HOST = "192.168.1.105" # Standard loopback interface address (localhost)
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+HOST = str(input("Ingrese IP del servidor: "))  # The server's hostname or IP address
+PORT = int(input("Ingrese Puerto del servidor: "))  # The port used by the server
+#HOST = "192.168.1.105" # Standard loopback interface address (localhost)
+#PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
