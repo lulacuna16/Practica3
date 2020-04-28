@@ -209,6 +209,8 @@ def jugar(matriz,listaConexiones,listaHilos):
 
 def gestionHilos():
     logging.debug('Jugador: ')
+    b.wait()
+
 def IniciarHilos(listaConexiones,case):
     if case==1:
         matriz=matrizP()
@@ -249,13 +251,14 @@ def servirPorSiempre(TCPServerSocket, listaConexiones):
     except Exception as e:
         print(e)
 
-HOST = "192.168.1.105"  # Standard loopback interface address (localhost)
+HOST = "192.168.1.64"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 listaConexiones = []
 listaHilos=[]
 
 numConn=int(input("Ingrese Número de conexiones a aceptar: "))
+b=threading.Barrier(numConn)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPServerSocket:
     TCPServerSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     TCPServerSocket.bind((HOST, PORT))
