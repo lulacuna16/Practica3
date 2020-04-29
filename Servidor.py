@@ -207,8 +207,14 @@ def jugar(matriz,listaConexiones,listaHilos):
     final=time()
     print("Duracion de la partida %.2f segundos" %(final-inicio))
 
-def gestionHilos():
+def gestionHilos(i,Client_conn):
     logging.debug('Jugador: ')
+    if (i+1)==numConn:
+        Client_conn.sendall(b"Eres el jugador que faltaba")
+    else:
+        msg = "Esperando la conexion de los jugadores faltantes (" + str(numConn - len(listaConexiones)) + ")"
+        Client_conn.sendall(msg.encode())
+        print("Faltan " + str(numConn -(i+1)) + " conexion(es)")
     b.wait()
 
 def IniciarHilos(listaConexiones,case):
@@ -218,24 +224,20 @@ def IniciarHilos(listaConexiones,case):
     if case==2:
         matriz=matrizA()
         #print("se creo matriz A")
-    for i in range (len(listaConexiones)):
-        listaHilos.append(threading.Thread(target=gestionHilos,name="J"+str(i)))
-        listaHilos[i].start()
+
     jugar(matriz,listaConexiones,listaHilos)
 def servirPorSiempre(TCPServerSocket, listaConexiones):
+    i=0
     try:
         while True:
             Client_conn, Client_addr = TCPServerSocket.accept()
             listaConexiones.append(Client_conn)
-            if len(listaConexiones)<numConn:
-                msg="Esperando la conexion de los jugadores faltantes ("+str(numConn-len(listaConexiones))+")"
-                Client_conn.sendall(msg.encode())
-                print("Faltan "+str(numConn-len(listaConexiones))+" conexion(es)")
-            else:
-                Client_conn.sendall(b"Eres el jugador que faltaba")
-                jugadores=bytes([len(listaConexiones)])
-                for i in range (0,len(listaConexiones)):
-                    listaConexiones[i].sendall(jugadores)
+            listaHilos.append(threading.Thread(target=gestionHilos,args=(i,Client_conn), name="J" + str(i)))
+            listaHilos[-1].start()
+            i+=1
+            jugadores=bytes([len(listaConexiones)])
+            for i in range (0,len(listaConexiones)):
+                listaConexiones[i].sendall(jugadores)
             if len(listaConexiones)==numConn:
                 print("Esperando inicio de juego")
                 for j in range(0,len(listaConexiones)):
@@ -252,7 +254,7 @@ def servirPorSiempre(TCPServerSocket, listaConexiones):
         print(e)
 
 HOST = "192.168.1.64"  # Standard loopback interface address (localhost)
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+PORT = 56432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 listaConexiones = []
 listaHilos=[]
