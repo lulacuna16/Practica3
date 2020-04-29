@@ -217,16 +217,15 @@ def gestionHilos(i,Client_conn):
         print("Faltan " + str(numConn -(i+1)) + " conexion(es)")
     b.wait()
 
-def IniciarHilos(listaConexiones,case):
+def IniciarHilos(listaConexiones,case,listaHilos):
     if case==1:
         matriz=matrizP()
         #print("se creo matriz P")
     if case==2:
         matriz=matrizA()
         #print("se creo matriz A")
-
     jugar(matriz,listaConexiones,listaHilos)
-def servirPorSiempre(TCPServerSocket, listaConexiones):
+def servirPorSiempre(TCPServerSocket, listaConexiones,listaHilos):
     i=0
     try:
         while True:
@@ -249,7 +248,7 @@ def servirPorSiempre(TCPServerSocket, listaConexiones):
                 caseb = case.to_bytes(1, 'little')
                 for z in range(0,len(listaConexiones)):
                     listaConexiones[z].sendall(caseb) #Envia a todos los clientes el nivel elegido
-                IniciarHilos(listaConexiones,case)
+                IniciarHilos(listaConexiones,case,listaHilos)
     except Exception as e:
         print(e)
 
