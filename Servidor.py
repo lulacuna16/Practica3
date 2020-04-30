@@ -207,15 +207,29 @@ def jugar(matriz,listaConexiones,listaHilos):
     final=time()
     print("Duracion de la partida %.2f segundos" %(final-inicio))
 
-def gestionHilos(i,Client_conn):
+def gestionHilos(i,Client_conn,b):
     logging.debug('Jugador: ')
-    if (i+1)==numConn:
-        Client_conn.sendall(b"Eres el jugador que faltaba")
+    Client_conn.sendall((numConn - (i+1)).to_bytes(1, byteorder='little'))
+    cliente = (i).to_bytes(1, 'little')
+    Client_conn.sendall(cliente)  # Envia el numero de cliente a cada uno de ellos
+    if (b.n_waiting+1)==numConn:
+        print("Todos los jugadores se han conectado")
     else:
-        msg = "Esperando la conexion de los jugadores faltantes (" + str(numConn - len(listaConexiones)) + ")"
-        Client_conn.sendall(msg.encode())
-        print("Faltan " + str(numConn -(i+1)) + " conexion(es)")
+        print("Faltan " + str(numConn - (i + 1)) + " conexion(es)")
     b.wait()
+    Client_conn.sendall(b"Inicia")
+    logging.debug('Inicio en: ')
+    continuarInicio(listaConexiones,listaHilos,threading.active_count()-1)
+
+def continuarInicio(listaConexiones,listaHilos,i):
+    if(i==len(listaHilos)):
+        # Solo el jugador 0, el primero en conectarse, puede escoger la dificultad
+        case = int.from_bytes(listaConexiones[0].recv(buffer_size), 'little')
+        print("Recibido modo de juego: ", case)
+        caseb = case.to_bytes(1, byteorder='little')
+        for z in range(0, len(listaConexiones)):
+            listaConexiones[z].sendall(caseb)  # Envia a todos los clientes el nivel elegido
+        IniciarHilos(listaConexiones, case, listaHilos)
 
 def IniciarHilos(listaConexiones,case,listaHilos):
     if case==1:
@@ -225,34 +239,21 @@ def IniciarHilos(listaConexiones,case,listaHilos):
         matriz=matrizA()
         #print("se creo matriz A")
     jugar(matriz,listaConexiones,listaHilos)
-def servirPorSiempre(TCPServerSocket, listaConexiones,listaHilos):
+def servirPorSiempre(TCPServerSocket, listaConexiones,listaHilos,numConn):
     i=0
-    try:
-        while True:
+    #try:
+    while True:
             Client_conn, Client_addr = TCPServerSocket.accept()
             listaConexiones.append(Client_conn)
-            listaHilos.append(threading.Thread(target=gestionHilos,args=(i,Client_conn), name="J" + str(i)))
-            listaHilos[-1].start()
-            i+=1
-            jugadores=bytes([len(listaConexiones)])
-            for i in range (0,len(listaConexiones)):
-                listaConexiones[i].sendall(jugadores)
-            if len(listaConexiones)==numConn:
-                print("Esperando inicio de juego")
-                for j in range(0,len(listaConexiones)):
-                    cliente=j.to_bytes(1, 'little')
-                    listaConexiones[j].sendall(cliente) #Envia el numero de cliente a cada uno de ellos
-                #Solo el jugador 0, el primero en conectarse, puede escoger la dificultad
-                case = int.from_bytes(listaConexiones[0].recv(buffer_size), 'little')
-                print("Recibido modo de juego: ", case)
-                caseb = case.to_bytes(1, 'little')
-                for z in range(0,len(listaConexiones)):
-                    listaConexiones[z].sendall(caseb) #Envia a todos los clientes el nivel elegido
-                IniciarHilos(listaConexiones,case,listaHilos)
-    except Exception as e:
-        print(e)
+            listaHilos.append(threading.Thread(target=gestionHilos,args=(i,Client_conn,b), name="J" + str(i),))
+            listaHilos[i].start()
+            i += 1
 
-HOST = "192.168.1.64"  # Standard loopback interface address (localhost)
+
+    #except Exception as e:
+        #print(e)
+
+HOST = "192.168.1.105"  # Standard loopback interface address (localhost)
 PORT = 56432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 listaConexiones = []
@@ -265,4 +266,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPServerSocket:
     TCPServerSocket.bind((HOST, PORT))
     TCPServerSocket.listen(int(numConn))
     print("El servidor TCP está disponible y en espera de solicitudes")
-    servirPorSiempre(TCPServerSocket, listaConexiones)
+    servirPorSiempre(TCPServerSocket, listaConexiones,listaHilos,numConn)

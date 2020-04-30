@@ -222,24 +222,30 @@ def jugar(matriz, TCPClientSocket,Jugadores,Cliente):
     print("Duracion de la partida %.2f segundos" %(final-inicio))
 
 
-HOST = str(input("Ingrese IP del servidor: "))  # The server's hostname or IP address
-PORT = int(input("Ingrese Puerto del servidor: "))  # The port used by the server
-#HOST = "192.168.1.105" # Standard loopback interface address (localhost)
-#PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+#HOST = str(input("Ingrese IP del servidor: "))  # The server's hostname or IP address
+#PORT = int(input("Ingrese Puerto del servidor: "))  # The port used by the server
+HOST = "192.168.1.105" # Standard loopback interface address (localhost)
+PORT = 56432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     TCPClientSocket.connect((HOST, PORT))
 
-    print(str(TCPClientSocket.recv(buffer_size), "ascii")) #Mensaje de espera de otros jugadores
-    Jugadores = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little') #Tener presente cuantos jugadores hay
-    print("Todos los jugadores (%d) se han conectado"%Jugadores)  # Mensaje de todos jugadores conectados
-    cliente = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little') #Veririficar que jugador soy
-
+    Jugadores = int.from_bytes(TCPClientSocket.recv(buffer_size), byteorder='little')  # Tener presente cuantos jugadores hay
+    cliente = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little')  # Veririficar que jugador soy
+    print("Jugador: ",cliente)
+    if Jugadores==0:
+        print("Eres el jugador que faltaba")#mensaje de ultimo jugador que faltaba
+        Jugadores = cliente +1
+    else:
+        print("Esperando la conexion de los jugadores faltantes (%d)" % Jugadores)  # Mensaje de espera de otros jugadores
+        Jugadores+=cliente +1
+    print(Jugadores)
+    TCPClientSocket.recv(buffer_size)
+    print("Todos los jugadores (%d) estan conectados"%Jugadores)
     if(cliente==0):
-        print("Jugador:", cliente)
         verMenu(TCPClientSocket) #Menu para elegir dificultad
     else:
-        print("Jugador: ",cliente,". Esperando tablero de juego")
+        print("Esperando tablero de juego")
     case = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little')#Dificultad elegida por jugador 1
     menu(case,Jugadores,cliente,TCPClientSocket)# Se genera el tablero con la dificultad elegida
