@@ -224,7 +224,7 @@ def jugar(matriz, TCPClientSocket,Jugadores,Cliente):
 
 #HOST = str(input("Ingrese IP del servidor: "))  # The server's hostname or IP address
 #PORT = int(input("Ingrese Puerto del servidor: "))  # The port used by the server
-HOST = "192.168.1.105" # Standard loopback interface address (localhost)
+HOST = "192.168.1.64" # Standard loopback interface address (localhost)
 PORT = 56432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 
@@ -236,10 +236,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     print("Jugador: ",cliente)
     if Jugadores==0:
         print("Eres el jugador que faltaba")#mensaje de ultimo jugador que faltaba
-        Jugadores = cliente +1
+        Jugadores = cliente
     else:
         print("Esperando la conexion de los jugadores faltantes (%d)" % Jugadores)  # Mensaje de espera de otros jugadores
-        Jugadores+=cliente +1
+        Jugadores+=cliente
+    Jugadores+=1
     print(Jugadores)
     TCPClientSocket.recv(buffer_size)
     print("Todos los jugadores (%d) estan conectados"%Jugadores)

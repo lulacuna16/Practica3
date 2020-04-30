@@ -145,13 +145,11 @@ def juegoAuto(matriz,sim,listaConexiones,listaHilos):
         print("Actualizando tablero de", listaHilos[j].getName())
         listaConexiones[j].sendall(pos.encode())
         listaConexiones[j].sendall(msg.encode())
-        continue
 def actTablero(pos, listaConexiones,listaHilos,i):
     for j in range(len(listaHilos)):
         if (i != j): #Evitar que se envíe la posicion al jugador que hizo la jugada
             print("Actualizando tablero de", listaHilos[j].getName())
             listaConexiones[j].sendall(pos.encode())
-            continue
 def jugar(matriz,listaConexiones,listaHilos):
     simJ="x"
     simS="o"
@@ -163,30 +161,28 @@ def jugar(matriz,listaConexiones,listaHilos):
     inicio=time()
     while cont<long:
         for i in range(len(listaConexiones)):
-            with Lock(): #Bloquear opciones de tiro mientras esta el jugador correspondiente en turno
+            with lock: #Bloquear opciones de tiro mientras esta el jugador correspondiente en turno
                 print("TURNO JUGADOR "+listaHilos[i].getName()+"\n")
                 pos=colocar(matriz,simJ,listaConexiones[i])
-                actTablero(pos, listaConexiones, listaHilos, i)
-                verMatriz(matriz)
-                if ganarH(matriz,simJ) is 1:
+            actTablero(pos, listaConexiones, listaHilos, i)
+            verMatriz(matriz)
+            if ganarH(matriz,simJ) is 1:
                     print("Gano JUGADOR "+listaHilos[i].getName()+"\n")
                     termina=True
                     break
-                if ganarV(matriz, simJ) is 1:
+            if ganarV(matriz, simJ) is 1:
                     print("Gano JUGADOR "+listaHilos[i].getName()+"\n")
                     termina = True
                     break
-                if ganarD(matriz, simJ) is 1:
+            if ganarD(matriz, simJ) is 1:
                     print("Gano JUGADOR "+listaHilos[i].getName()+"\n")
                     termina = True
                     break
-                cont+=1
-                if cont>=long:
+            cont+=1
+            if cont>=long:
                     print("Juego Terminado: EMPATE")
                     termina = True
                     break
-            if termina:
-                break
         if termina:
             break
         print("TURNO MAQUINA\n")
@@ -217,16 +213,15 @@ def gestionHilos(i,Client_conn,b):
     else:
         print("Faltan " + str(numConn - (i + 1)) + " conexion(es)")
     b.wait()
-    Client_conn.sendall(b"Inicia")
+    Client_conn.sendall((threading.active_count()-1).to_bytes(1, 'little'))
     logging.debug('Inicio en: ')
-    continuarInicio(listaConexiones,listaHilos,threading.active_count()-1)
 
-def continuarInicio(listaConexiones,listaHilos,i):
-    if(i==len(listaHilos)):
+
+def continuarInicio(listaConexiones,listaHilos):
         # Solo el jugador 0, el primero en conectarse, puede escoger la dificultad
         case = int.from_bytes(listaConexiones[0].recv(buffer_size), 'little')
         print("Recibido modo de juego: ", case)
-        caseb = case.to_bytes(1, byteorder='little')
+        caseb = case.to_bytes(2, byteorder='little')
         for z in range(0, len(listaConexiones)):
             listaConexiones[z].sendall(caseb)  # Envia a todos los clientes el nivel elegido
         IniciarHilos(listaConexiones, case, listaHilos)
@@ -249,15 +244,18 @@ def servirPorSiempre(TCPServerSocket, listaConexiones,listaHilos,numConn):
             listaHilos[i].start()
             i += 1
 
+            if((threading.active_count()-1)==numConn):
+                continuarInicio(listaConexiones, listaHilos)
 
     #except Exception as e:
         #print(e)
 
-HOST = "192.168.1.105"  # Standard loopback interface address (localhost)
+HOST = "192.168.1.64"  # Standard loopback interface address (localhost)
 PORT = 56432  # Port to listen on (non-privileged ports are > 1023)
 buffer_size = 1024
 listaConexiones = []
 listaHilos=[]
+lock=threading.Lock()
 
 numConn=int(input("Ingrese Número de conexiones a aceptar: "))
 b=threading.Barrier(numConn)
