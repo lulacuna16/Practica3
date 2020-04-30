@@ -144,7 +144,7 @@ def juegoAuto(matriz,sim,listaConexiones,listaHilos):
     for j in range(len(listaHilos)):
         print("Actualizando tablero de", listaHilos[j].getName())
         listaConexiones[j].sendall(pos.encode())
-        listaConexiones[j].sendall(msg.encode())
+        #listaConexiones[j].sendall(msg.encode())
 def actTablero(pos, listaConexiones,listaHilos,i):
     for j in range(len(listaHilos)):
         if (i != j): #Evitar que se envíe la posicion al jugador que hizo la jugada

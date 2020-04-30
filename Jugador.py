@@ -135,11 +135,11 @@ def colocar(matriz,sim,TCPClientSocket):
                 break
     TCPClientSocket.sendall(pos.encode())
 def juegoAuto(matriz,sim,TCPClientSocket): #Juego de la maquina
-    pos=str(TCPClientSocket.recv(buffer_size),"ascii")
+    pos=str(TCPClientSocket.recv(int(buffer_size/2)),"ascii")
     fila = int (pos[0])
     col = ord(pos[1]) - 64
     matriz[int(fila)][int(col)] = sim
-    print(str(TCPClientSocket.recv(buffer_size),"ascii"))
+    #print(str(TCPClientSocket.recv(buffer_size),"ascii"))
 def actTablero(matriz,sim,pos): #Recibe las jugadas de los otros jugadores
     fila = int(pos[0])
     col = ord(pos[1]) - 64
@@ -231,8 +231,8 @@ buffer_size = 1024
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
     TCPClientSocket.connect((HOST, PORT))
 
-    Jugadores = int.from_bytes(TCPClientSocket.recv(buffer_size), byteorder='little')  # Tener presente cuantos jugadores hay
-    cliente = int.from_bytes(TCPClientSocket.recv(buffer_size), 'little')  # Veririficar que jugador soy
+    Jugadores = int.from_bytes(TCPClientSocket.recv(int(buffer_size/2)), byteorder='little')  # Tener presente cuantos jugadores hay
+    cliente = int.from_bytes(TCPClientSocket.recv(int(buffer_size/2)), 'little')  # Veririficar que jugador soy
     print("Jugador: ",cliente)
     if Jugadores==0:
         print("Eres el jugador que faltaba")#mensaje de ultimo jugador que faltaba
@@ -242,7 +242,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as TCPClientSocket:
         Jugadores+=cliente
     Jugadores+=1
     print(Jugadores)
-    TCPClientSocket.recv(buffer_size)
+    TCPClientSocket.recv(int(buffer_size/2))
     print("Todos los jugadores (%d) estan conectados"%Jugadores)
     if(cliente==0):
         verMenu(TCPClientSocket) #Menu para elegir dificultad
